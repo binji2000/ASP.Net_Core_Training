@@ -1,0 +1,12 @@
+﻿@model IEnumerable<EComm.Data.Product>
+
+<table class="table-striped">
+    @foreach (var product in Model)
+    {
+        <tr>
+            <td>@product.ProductName</td>
+            <td>@product.UnitPrice</td>
+        </tr>
+    }
+</table>
+

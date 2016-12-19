@@ -1,0 +1,19 @@
+<script type="text/javascript">
+    $(document).ready(function() {
+      $('form').submit(function(event) {
+          var formData = {
+              'id':$('input[name=id]').val(),
+              'quantity':$('input[name=quantity]').val()
+          };
+          $.ajax({
+              type:'POST',
+              url:'@Url.Action("AddToCart", "Product")', 
+              data:formData
+          })
+            .done(function(response) {
+              $('#message').html(response);                
+            });
+          event.preventDefault();
+      });
+    });
+  </script>
