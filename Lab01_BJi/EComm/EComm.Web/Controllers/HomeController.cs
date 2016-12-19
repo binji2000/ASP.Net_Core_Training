@@ -10,7 +10,15 @@ namespace EComm.Web.Controllers
     {
         public IActionResult Index()
         {
+            //            return Content("Hello from HomeController");
+
+            //return Content("<strong>Hello</strong> from <em>HomeController</em>", "text/html");
+
+            //var person = new {FirstName = "Bill", LastName = "Gates"};
+            //return Json(person);
+
             return View();
+
         }
 
         public IActionResult About()
