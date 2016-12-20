@@ -31,6 +31,18 @@ namespace EComm.Web.Controllers
             }
             return View(model);
         }
+
+
+        [HttpPost]
+        /* id value is retrieved from page url. quantity is retrieved from http post parameter */
+        public IActionResult AddToCart(int id, int quantity)
+        {
+            var product = _context.Products.SingleOrDefault(p => p.Id == id);
+            var totalCost = quantity*product.UnitPrice;
+            string message =
+                $"you added {product.ProductName} (x {quantity}) to your cart at a total cost of {totalCost:c}";
+            return PartialView("_AddedToCart", message);
+        }
     }
 
     public class ProductList : ViewComponent
