@@ -1,0 +1,14 @@
+﻿@model EComm.Data.Product
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = Model.ProductName;
+}
+
+<h4>@Model.ProductName</h4>
+<h4>Price: @Model.FormattedUnitPrice</h4>
+<h4>Supplier: @Model.Supplier.CompanyName</h4>
+<h4>Package: @Model.Package</h4>
+
+

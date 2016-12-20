@@ -28,7 +28,10 @@ namespace EComm.Web.Controllers
 
             //return View();
 
-            return Content($"Number of products: {_context.Products.Count()}");
+            //return Content($"Number of products: {_context.Products.Count()}");
+
+            var model = _context.Products.ToList();
+            return View(model);
 
         }
 
