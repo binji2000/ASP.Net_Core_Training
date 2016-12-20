@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EComm.Data;
+using EComm.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,7 +42,32 @@ namespace EComm.Web.Controllers
             var totalCost = quantity*product.UnitPrice;
             string message =
                 $"you added {product.ProductName} (x {quantity}) to your cart at a total cost of {totalCost:c}";
+
+            var cart = ShoppingCart.GetFromSession(HttpContext.Session);
+            var lineItem = cart.LineItems.SingleOrDefault(item =>
+                                          item.Product.Id == id);
+            if (lineItem != null)
+            {
+                lineItem.Quantity += quantity;
+            }
+            else
+            {
+                cart.LineItems.Add(new ShoppingCart.LineItem
+                {
+                    Product = product,
+                    Quantity = quantity
+                });
+            }
+            ShoppingCart.StoreInSession(cart, HttpContext.Session);
+
+
             return PartialView("_AddedToCart", message);
+        }
+
+        public IActionResult Cart()
+        {
+            var cart = ShoppingCart.GetFromSession(HttpContext.Session);
+            return View(cart);
         }
     }
 

@@ -36,6 +36,8 @@ namespace EComm.Web
                 options.UseSqlServer(Configuration.GetConnectionString(("Defaultconnection")))
                 );
 
+            services.AddMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,12 +58,16 @@ namespace EComm.Web
 
             app.UseStaticFiles();
 
+            app.UseSession();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            
         }
     }
 }
