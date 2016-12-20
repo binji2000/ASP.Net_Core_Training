@@ -20,9 +20,15 @@ namespace EComm.Web.Controllers
         }
 
         // GET: /<controller>/
+        [Route("product/{id:int}")]
         public IActionResult Detail(int id)
         {
             var model = _context.Products.Include(p => p.Supplier).SingleOrDefault(p => p.Id == id);
+            if (model == null)
+            {
+                return NotFound();
+
+            }
             return View(model);
         }
     }
