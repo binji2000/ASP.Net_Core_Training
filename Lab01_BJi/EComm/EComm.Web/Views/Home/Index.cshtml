@@ -1,5 +1,4 @@
-﻿@model IEnumerable<EComm.Data.Product>
-
+﻿
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -8,7 +7,7 @@
 <div class="row">
     <div class="col-md-12">
         <table class="table-striped">
-            @Html.Partial("_ProductList", Model)
+            @await Component.InvokeAsync("ProductList")
         </table>
     </div>
 </div>

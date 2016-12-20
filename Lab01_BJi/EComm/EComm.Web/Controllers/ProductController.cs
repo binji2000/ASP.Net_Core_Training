@@ -26,4 +26,20 @@ namespace EComm.Web.Controllers
             return View(model);
         }
     }
+
+    public class ProductList : ViewComponent
+    {
+        private ECommContext _context;
+
+        public ProductList(ECommContext context)
+        {
+            _context = context;
+        }
+
+        public IViewComponentResult Invoke()
+        {
+            var model = _context.Products.ToList();
+            return View("~/Views/Shared/_ProductList.cshtml", model);
+        }
+    }
 }

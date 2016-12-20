@@ -9,13 +9,7 @@ namespace EComm.Web.Controllers
 {
     public class HomeController : Controller
     {
-
-        private ECommContext _context;
-
-        public HomeController(ECommContext context)
-        {
-            _context = context;
-        }
+        
 
         public IActionResult Index()
         {
@@ -26,12 +20,12 @@ namespace EComm.Web.Controllers
             //var person = new {FirstName = "Bill", LastName = "Gates"};
             //return Json(person);
 
-            //return View();
+            return View();
 
             //return Content($"Number of products: {_context.Products.Count()}");
 
-            var model = _context.Products.ToList();
-            return View(model);
+            //var model = _context.Products.ToList();
+            //return View(model);
 
         }
 
