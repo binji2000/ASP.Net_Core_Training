@@ -54,6 +54,8 @@ namespace EComm.Web
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            app.UseStatusCodePagesWithReExecute("/error/{0}");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
