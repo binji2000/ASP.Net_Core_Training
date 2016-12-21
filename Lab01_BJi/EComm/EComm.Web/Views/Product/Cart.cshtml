@@ -1,31 +1,38 @@
-﻿@model EComm.Web.Models.ShoppingCart
+﻿@model EComm.Web.ViewModels.CartViewModel
 
 <h1>Shopping Cart</h1>
 <div class="row">
     <div class="col-md-12">
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                </tr>
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Total</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var lineItem in Model.LineItems)
-                {
-                    <tr>
-                        <td>@lineItem.Product.ProductName</td>
-                        <td>@lineItem.Quantity</td>
-                        <td>@String.Format("{0:C}", lineItem.TotalCost)</td>
-                    </tr>
-                }
+            @foreach (var lineItem in Model.Cart.LineItems)
+            {
                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td>@Model.FormattedGradTotal</td>
+                    <td>@lineItem.Product.ProductName</td>
+                    <td>@lineItem.Quantity</td>
+                    <td>@String.Format("{0:C}", lineItem.TotalCost)</td>
                 </tr>
+            }
+            <tr>
+                <td></td>
+                <td></td>
+                <td>@Model.Cart.FormattedGradTotal</td>
+            </tr>
             </tbody>
         </table>
+        
+        @Html.Partial("_CheckoutForm", Model)
     </div>
 </div>
+
+@section scripts {
+    @Html.Partial("_ValidationScripts")
+}
+

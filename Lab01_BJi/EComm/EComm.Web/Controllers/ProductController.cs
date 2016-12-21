@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EComm.Data;
 using EComm.Web.Models;
+using EComm.Web.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -67,8 +68,24 @@ namespace EComm.Web.Controllers
         public IActionResult Cart()
         {
             var cart = ShoppingCart.GetFromSession(HttpContext.Session);
-            return View(cart);
+            var model = new CartViewModel() {Cart = cart};
+            return View(model);
         }
+
+        [HttpPost]
+        public IActionResult Checkout(CartViewModel cvm)
+        {
+            if (!ModelState.IsValid)
+            {
+                cvm.Cart = ShoppingCart.GetFromSession(HttpContext.Session);
+                return View("Cart", cvm);
+            }
+            // TODO: Charge the customer's card and record the order
+            HttpContext.Session.Clear();
+            return View("ThankYou");
+        }
+
+
     }
 
     public class ProductList : ViewComponent
