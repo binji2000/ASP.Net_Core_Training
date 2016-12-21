@@ -54,6 +54,7 @@ namespace EComm.Web
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            /* send all errors to /error/{status_code} page */
             app.UseStatusCodePagesWithReExecute("/error/{0}");
 
             if (env.IsDevelopment())
@@ -66,16 +67,21 @@ namespace EComm.Web
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            /* support static files, such as html, javascript, etc. */
             app.UseStaticFiles();
 
+            /* support http session */
             app.UseSession();
 
+            /* use cokkie middleware to support authentication. */
             app.UseCookieAuthentication(new CookieAuthenticationOptions()
             {
                 LoginPath = new PathString("/Auth/Login"),
                 AccessDeniedPath = new PathString("/Auth/Forbidden"),
                 AutomaticChallenge = true
             });
+
+            /* define the routing */
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
