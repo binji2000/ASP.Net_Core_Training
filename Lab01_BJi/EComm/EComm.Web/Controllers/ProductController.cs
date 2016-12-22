@@ -36,6 +36,20 @@ namespace EComm.Web.Controllers
             return View(model);
         }
 
+        // GET: /<controller>/
+        [Authorize(Policy = "AdminsOnly")]
+        public IActionResult Edit(int id)
+        {
+            var product = _context.Products.Include(p => p.Supplier).SingleOrDefault(p => p.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+
+            }
+            // var person = new { FirstName = "Bill", LastName = "Gates" };
+            var model = new ProductEditViewModel(){Product = product, Suppliers = _context.Suppliers };
+            return View(model);
+        }
 
         [HttpPost]
         /* id value is retrieved from page url. quantity is retrieved from http post parameter */
@@ -87,6 +101,31 @@ namespace EComm.Web.Controllers
             return View("ThankYou");
         }
 
+        [Authorize(Policy = "AdminsOnly")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Save(ProductEditViewModel cvm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Edit", cvm);
+            }
+            var product = _context.Products.SingleOrDefault(p => p.Id == cvm.Product.Id);
+            product.ProductName = cvm.Product.ProductName;
+            product.UnitPrice = cvm.Product.UnitPrice;
+            product.Package = cvm.Product.Package;
+            product.SupplierId = cvm.Product.SupplierId;
+
+//            _context.Update(cvm.Product);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Home");
+//            return RedirectToAction("Detail");
+            //return Detail(cvm.Product.Id);
+            //return View("Detail");
+        }
+
+
 
     }
 
@@ -102,6 +141,10 @@ namespace EComm.Web.Controllers
         public IViewComponentResult Invoke()
         {
             var model = _context.Products.ToList();
+            if (User.IsInRole("Admin"))
+            {
+                return View("~/Views/Shared/_ProductListAdmin.cshtml", model);
+            }
             return View("~/Views/Shared/_ProductList.cshtml", model);
         }
     }
