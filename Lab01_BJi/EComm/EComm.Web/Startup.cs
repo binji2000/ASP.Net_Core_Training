@@ -5,8 +5,11 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using EComm.Data;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,6 +34,15 @@ namespace EComm.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            /* config the web api access policy after the policy has been added in Configure() */
+            services.AddCors(options =>
+                options.AddPolicy("AllowAll", p =>
+                {
+                    p.AllowAnyOrigin();
+                    p.AllowAnyHeader();
+                    p.AllowAnyMethod();
+
+                }));
             
             services.AddDbContext<ECommContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString(("Defaultconnection")))
@@ -44,8 +56,19 @@ namespace EComm.Web
             });
 
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(config =>
+            {
+                config.RespectBrowserAcceptHeader = true;
+                config.InputFormatters.Add(new XmlSerializerInputFormatter());
+                config.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+            });
 
+            services.AddApiVersioning(options =>
+            {
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.DefaultApiVersion = new ApiVersion(1, 0);
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,6 +103,10 @@ namespace EComm.Web
                 AccessDeniedPath = new PathString("/Auth/Forbidden"),
                 AutomaticChallenge = true
             });
+
+
+            /* allow web api request from all domains, even for request from outside of domain */
+            app.UseCors("AllowAll");
 
             /* define the routing */
             app.UseMvc(routes =>
